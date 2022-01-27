@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guardar Reserva</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/2c9fa6342b.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <h2>Guardar Reserva</h2>
+  <div class="container m-5">
+
+    <div th:if="${exito}!=null" class="card text-white bg-success mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Exito</h5>
+        <p class="card-text" th:text="${exito}"></p>
+      </div>
+    </div>
+    <div th:if="${error}!=null" class="card text-white bg-danger mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Error</h5>
+        <p class="card-text" th:text="${error}"></p>
+      </div>
+    </div>
+
+    <form th:action="@{/casa/filtrarCasas/__${idCliente}__}" method="POST" class="row g-3" enctype="multipart/form-data">
+
+      <input type="hidden" th:value="${idCliente}" name="id">
+
+      <div class="col-md-4">
+        <label for="validationDefaultUsername" class="form-label">Fecha de Ingreso </label>
+        <div class="input-group">
+          <input type="date" name="fechaDesde" class="form-control" id="validationDefaultUsername"
+            aria-describedby ="inputGroupPrepend2" required>
+        </div>
+        <div class="col-md-4">
+          <label for="validationDefault01" class="form-label">Fecha de Baja</label>
+          <input type="date" name="fechaHasta" class="form-control" id="validationDefault01" required>
+        </div>
+        <div class="col-12">
+          <button class="btn btn-primary" type="submit">Buscar</button>
+        </div>
+        <a class="btn btn-primary" th:href="@{/cliente/listarClientes}" role="button">Volver</a>
+    </form>
+
+    <div class="container m-5">
+
+      <table class="table table-dark">
+        <thead>
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Calle</th>
+            <th scope="col">Numero</th>
+            <th scope="col">Codigo Postal</th>
+            <th scope="col">Ciudad</th>
+            <th scope="col">Pais</th>
+            <th scope="col">Fecha Desde</th>
+            <th scope="col">Fecha Hasta</th>
+            <th scope="col">Minimo Dias</th>
+            <th scope="col">Maximo Dias</th>
+            <th scope="col">Precio</th>
+            <th scope="col">Tipo de Vivienda</th>
+            <th scope="col">Imagen</th>
+            <th scope="col">Activo</th>
+            <th scope="col">Acciones</th>
+          </tr>
+        </thead>
+        <tbody th:each="casa : ${casas}">
+          <tr>
+            <th scope="row" th:text="${casa.id}"></th>
+            <th scope="row" th:text="${casa.calle}"></th>
+            <th scope="row" th:text="${casa.numero}"></th>
+            <th scope="row" th:text="${casa.codPostal}"></th>
+            <td th:text="${casa.ciudad}"></td>
+            <td th:text="${casa.pais}"></td>
+            <td th:text="${casa.fechaDesde}"></td>
+            <td th:text="${casa.fechaHasta}"></td>
+            <td th:text="${casa.minDias}"></td>
+            <td th:text="${casa.maxDias}"></td>
+            <td th:text="${casa.precio}"></td>
+            <td th:text="${casa.tipoVivienda}"></td>
+            <td>
+              <img th:if="${casa.foto != null}" class="img-fluid rounded-circle" th:src="${'/foto/casa/' + casa.id}"
+                alt="">
+              <img th:if="${casa.foto == null}" class="img-fluid rounded-circle" src="/img/casabasica.jpg" alt="">
+            </td>
+            <td>
+              <i th:if="${casa.alta}" class="fa fa-circle text-success"></i>
+              <i th:unless="${casa.alta}" class="fa fa-circle" style="color:red;"></i>
+            </td>
+            <td>
+
+              <a th:href="@{/reserva/guardarReserva(idCliente=${idCliente},idCasa=${casa.id},fechaDesde=${#dates.format(fechaDesde,'yyyy-MM-dd')},fechaHasta=${#dates.format(fechaHasta,'yyyy-MM-dd')})}"><i class="far fa-edit"></i></a>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">Descripcion</th>
+            <td colspan="14" th:text="${casa.descripcion}"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"></script>
+</body>
+
+</html>
