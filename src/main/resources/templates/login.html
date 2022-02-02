@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+</head>
+<body>
+    <h2>Iniciar Sesión</h2>
+	<div class="container m-5">
+
+	<div th:if="${logout}!=null" class="card text-white bg-success mb-3" >
+			<div class="card-body">
+				<!--<h5 class="card-title"></h5>-->
+				<p class="card-text" th:text="${logout}"></p>
+			</div>
+		</div>
+
+		<div th:if="${error}!=null" class="card text-white bg-danger mb-3" >
+			<div class="card-body">
+				<h5 class="card-title">Error</h5>
+				<p class="card-text" th:text="${error}"></p>
+			</div>
+		</div>
+
+    <form  th:action="@{/logincheck}" method="POST" class="row g-3">
+        <input type="hidden" th:value= "${rol}" name="rol">
+
+        <div class="col-md-4">
+          <label for="validationDefault01" class="form-label">E-Mail</label>
+          <input type="email" name="username" class="form-control" id="validationDefault01" placeholder="mail@email.com" required>
+        </div>
+        <div class="col-md-4">
+          <label for="validationDefault02" class="form-label">Password</label>
+          <input type="password" name="password" class="form-control" id="validationDefault02" placeholder="clave 4 a 6 digitos" required>
+        </div>
+      
+        <div class="col-12">
+          <button class="btn btn-primary" type="submit">Ingresar</button>
+        </div>
+        <a class="btn btn-primary" th:href="@{/}" role="button">Volver </a>
+      </form>    
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>    
+</body>
+</html>
