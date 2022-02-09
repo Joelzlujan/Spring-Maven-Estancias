@@ -30,16 +30,13 @@
 
         <div class="col-md-4">
             <label for="validationDefault01" class="form-label">Alias</label>
-            <input type="text" name="alias" th:value="${usuario.alias}"  class="form-control" id="validationDefault01" placeholder="alias" required>
+            <input type="text" name="alias" th:value="${usuario.alias}"  class="form-control" id="validationDefault01" placeholder="alias" readonly>
           </div>
           <div class="col-md-6">
             <label for="validationDefault03" class="form-label">Email</label>
             <input type="email" name="email" th:value="${usuario.email}"  class="form-control" id="validationDefault03" placeholder="Email" required>
           </div>
-          <div class="col-md-6">
-            <label for="validationDefault03" class="form-label">Password</label>
-            <input type="password" name="clave" th:value="${usuario.clave}"  class="form-control" id="validationDefault03" placeholder="Ingrese 4 a 6 digitos" required>
-          </div>
+ 
 
         <div class="col-12">
           <div class="form-check">
@@ -52,8 +49,10 @@
         <div class="col-12">
           <button class="btn btn-primary" type="submit">Guardar Modificacion</button>
         </div>
-        <a class="btn btn-primary" th:href="@{/}" role="button">Volver</a>
-      </form>    
+        <a class="btn btn-primary" type="button" th:href= "@{/usuario/claveUsuario/__${usuario.id}__}">Cambiar Constraseña</a>
+        <a class="btn btn-primary" th:href="@{/inicio}" role="button">Volver</a>
+      </form>
+      
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>    
 </body>

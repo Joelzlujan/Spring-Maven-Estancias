@@ -60,9 +60,7 @@
                             <a th:href= "@{/usuario/baja/__${familia.id}__/__${familia.rol}__}"><i class="fa fa-ban"></i></a> 
                             <a th:href= "@{/usuario/modificarFamilia/__${familia.id}__}"><i class="fas fa-user-edit"></i></a>
                             <a th:href= "@{/usuario/claveUsuario/__${familia.id}__}"><i class="fas fa-key"></i></a>
-                            <a th:href= "@{/casa/guardarCasa/__${familia.id}__}"><i class="fas fa-home"></i></a>
-                            <a th:if="${familia.casa!=null}"  th:href="@{/casa/mostrarCasa/__${familia.casa.id}__}"><i class="fas fa-door-open"></i></i></a>
-                            <a th:if="${familia.casa!=null}"  th:href="@{/casa/modificarCasa/__${familia.casa.id}__}"><i class="fas fa-house-user"></i></a>
+                            <a th:if="${familia.casa!=null}"  th:href="@{/casa/mostrarCasa/__${familia.casa.id}__}"><i class="fas fa-door-open"></i></i></a>                          
                         </td>
                     </tr>
 
@@ -72,7 +70,7 @@
             <section class="py-5 text-center container">
                 <div class="row py-lg-5">
                     <div class="col-lg-6 col-md-8 mx-auto">
-                        <a th:href="@{/familia}" class="btn btn-primary my-2" id="boton">Volver</a>
+                        <a th:href="@{/inicio}" class="btn btn-primary my-2" id="boton">Volver</a>
                         </p>
                     </div>
                 </div>

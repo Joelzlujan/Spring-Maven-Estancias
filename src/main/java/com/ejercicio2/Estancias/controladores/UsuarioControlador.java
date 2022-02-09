@@ -1,10 +1,13 @@
 package com.ejercicio2.Estancias.controladores;
 
+import com.ejercicio2.Estancias.entidades.Usuario;
 import com.ejercicio2.Estancias.enumeraciones.Rol;
 import com.ejercicio2.Estancias.servicios.ClienteServicio;
 import com.ejercicio2.Estancias.servicios.FamiliaServicio;
 import com.ejercicio2.Estancias.servicios.UsuarioServicio;
+import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +26,7 @@ public class UsuarioControlador {
 
     @Autowired
     private ClienteServicio cs;
-    
+
     @Autowired
     private FamiliaServicio fs;
 
@@ -33,28 +36,40 @@ public class UsuarioControlador {
         return "guardarCliente.html";
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_CLIENTE','ROLE_ADMIN')")
     @GetMapping("/modificarCliente/{id}")
     public String modificarCliente(@PathVariable String id, ModelMap modelo) {
         modelo.put("cliente", cs.buscarPorId(id));
         return "modificarCliente.html";
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_FAMILIA','ROLE_ADMIN')")
     @GetMapping("/modificarFamilia/{id}")
     public String modificarFamilia(@PathVariable String id, ModelMap modelo) {
         modelo.put("familia", fs.buscarPorId(id));
         return "modificarFamilia.html";
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @GetMapping("/modificarUsuario/{id}")
+    public String modificarUsuario(@PathVariable String id, ModelMap modelo) {
+        modelo.put("usuario", us.buscarPorId(id));
+        return "modificarUsuario.html";
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_CLIENTE','ROLE_ADMIN','ROLE_FAMILIA')")
     @PostMapping("/modificarUsuario/{id}")
     public String modificarCliente(
             @PathVariable String id,
             ModelMap modelo,
             //DATOS USUARIO
-            @RequestParam(required = false) String alias,
+             @RequestParam(required = false) String alias,
             @RequestParam(required = false) String email,
             //@RequestParam(required = false) String clave,
+
             @RequestParam Rol rol,
             //DATOS CLIENTE
+
             @RequestParam(required = false) String nombreC,
             @RequestParam(required = false) String calle,
             @RequestParam(required = false) Integer numero,
@@ -62,20 +77,24 @@ public class UsuarioControlador {
             @RequestParam(required = false) String ciudad,
             @RequestParam(required = false) String pais,
             //DATOS FAMILIA
+
             @RequestParam(required = false) String nombre,
             @RequestParam(required = false) Integer edadMin,
             @RequestParam(required = false) Integer edadMax,
             @RequestParam(required = false) Integer numHijos,
-            RedirectAttributes r
+            RedirectAttributes r,
+             HttpSession session
     ) {
         try {
             if (rol.equals(rol.CLIENTE)) {
-                us.modificarUsuario(id, alias, email, rol, nombre, edadMin, edadMax, numHijos, nombreC, calle, numero, codPostal, ciudad, pais);
+                Usuario usuario = us.modificarUsuario(id, alias, email, rol, nombre, edadMin, edadMax, numHijos, nombreC, calle, numero, codPostal, ciudad, pais);
+                session.setAttribute("usuariosession", usuario);            //esto nos sirve para actualizar la sesion y que se carguen los datos rapido
                 r.addFlashAttribute("exito", "Modificación exitosa");
                 return "redirect:/usuario/modificarCliente/{id}";
             }
             if (rol.equals(rol.FAMILIA)) {
-                us.modificarUsuario(id, alias, email, rol, nombre, edadMin, edadMax, numHijos, nombreC, calle, numero, codPostal, ciudad, pais);
+                Usuario usuario = us.modificarUsuario(id, alias, email, rol, nombre, edadMin, edadMax, numHijos, nombreC, calle, numero, codPostal, ciudad, pais);
+                session.setAttribute("usuariosession", usuario);            //util para actualizar gracias a la session los datos instantaneamente
                 r.addFlashAttribute("exito", "Modificación exitosa");
                 return "redirect:/usuario/modificarFamilia/{id}";
 
@@ -97,16 +116,21 @@ public class UsuarioControlador {
 
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_CLIENTE','ROLE_ADMIN','ROLE_FAMILIA')")
     @GetMapping("/claveUsuario/{id}")
-    public String cambiarClave(@PathVariable String id, ModelMap modelo) {
+    public String cambiarClave(@PathVariable String id, ModelMap modelo
+    ) {
         modelo.put("usuario", us.buscarPorId(id));
         return "claveUsuario.html";
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_CLIENTE','ROLE_ADMIN','ROLE_FAMILIA')")
     @PostMapping("/claveUsuario/{id}")
     public String cambiarClave(@PathVariable String id,
-            @RequestParam Rol rol, @RequestParam String clave1,
-            @RequestParam String clave2, RedirectAttributes r) {
+            @RequestParam Rol rol,
+            @RequestParam String clave1,
+            @RequestParam String clave2, RedirectAttributes r
+    ) {
         try {
 
             if (rol.equals(rol.CLIENTE)) {
@@ -146,7 +170,8 @@ public class UsuarioControlador {
             @RequestParam(required = false) String codPostal,
             @RequestParam(required = false) String ciudad,
             @RequestParam(required = false) String pais,
-            RedirectAttributes r) {
+            RedirectAttributes r
+    ) {
         try {
 
             us.crearUsuario(alias, email, clave, rol, nombre, edadMin, edadMax, numHijos, nombreC, calle, numero, codPostal, ciudad, pais);
@@ -167,13 +192,17 @@ public class UsuarioControlador {
     }
 
     @GetMapping("/guardarFamilia")
-    public String guardarFamilia(ModelMap modelo) {
+    public String guardarFamilia(ModelMap modelo
+    ) {
         modelo.put("rol", Rol.FAMILIA);
         return "guardarFamilia.html";
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_CLIENTE','ROLE_ADMIN','ROLE_FAMILIA')")
     @GetMapping("/alta/{id}/{rol}")
-    public String alta(@PathVariable String id, @PathVariable Rol rol, RedirectAttributes r) {
+    public String alta(@PathVariable String id,
+            @PathVariable Rol rol, RedirectAttributes r
+    ) {
 
         try {
             if (rol.equals(Rol.CLIENTE)) {
@@ -202,8 +231,11 @@ public class UsuarioControlador {
         }
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_CLIENTE','ROLE_ADMIN','ROLE_FAMILIA')")
     @GetMapping("/baja/{id}/{rol}")
-    public String baja(@PathVariable String id, @PathVariable Rol rol, RedirectAttributes r) {
+    public String baja(@PathVariable String id,
+            @PathVariable Rol rol, RedirectAttributes r
+    ) {
         try {
             if (rol.equals(Rol.CLIENTE)) {
                 us.darBajaUsuario(id);

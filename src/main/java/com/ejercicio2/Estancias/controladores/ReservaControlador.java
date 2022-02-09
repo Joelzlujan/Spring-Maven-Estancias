@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +30,7 @@ public class ReservaControlador {
     @Autowired
     CasaServicio cs;
 
+    @PreAuthorize("hasAnyRole('ROLE_CLIENTE')")
     @GetMapping("/guardarReserva")
     public String guardarReserva(@RequestParam String idCliente, @RequestParam String idCasa, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaDesde,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaHasta, ModelMap modelo) {
@@ -43,7 +45,8 @@ public class ReservaControlador {
         return "guardarReserva.html";
     }
 
-@PostMapping("/guardarReserva")
+    @PreAuthorize("hasAnyRole('ROLE_CLIENTE')")
+    @PostMapping("/guardarReserva")
     public String confirmarReserva(@RequestParam(required = false) String idCliente,
             @RequestParam(required = false) String idCasa,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaDesde,
@@ -62,22 +65,25 @@ public class ReservaControlador {
         return "redirect:/reserva/guardarReserva?idCliente=" + idCliente + "&idCasa=" + idCasa + "&fechaDesde=" + sdf.format(fechaDesde) + "&fechaHasta=" + sdf.format(fechaHasta);
 
     }
-
-@GetMapping("/listarReservas/{idCliente}")
-    public String listarReservasPorCliente(@PathVariable String idCliente,ModelMap modelo){
-        List<Reserva>reservas= rs.listarReservasPorCliente(idCliente);
+    
+    @PreAuthorize("hasAnyRole('ROLE_CLIENTE','ROLE_ADMIN')")
+    @GetMapping("/listarReservas/{idCliente}")
+    public String listarReservasPorCliente(@PathVariable String idCliente, ModelMap modelo) {
+        List<Reserva> reservas = rs.listarReservasPorCliente(idCliente);
         modelo.put("reservas", reservas);
         return "listarReservas.html";
     }
+
     
-@GetMapping("/baja/{idCliente}/{idReserva}")
-        public String baja(@PathVariable String idCliente,@PathVariable String idReserva, RedirectAttributes r) {
+    @PreAuthorize("hasAnyRole('ROLE_CLIENTE','ROLE_ADMIN','ROLE_FAMILIA')")
+    @GetMapping("/baja/{idCliente}/{idReserva}")
+    public String baja(@PathVariable String idCliente, @PathVariable String idReserva, RedirectAttributes r) {
         try {
             rs.darBajaReserva(idReserva);
         } catch (Exception e) {
             r.addFlashAttribute("error", e.getMessage());
         }
         return "redirect:/reserva/listarReservas/{idCliente}";
-    } 
-    
+    }
+
 }

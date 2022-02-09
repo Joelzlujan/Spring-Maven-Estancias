@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,12 +29,14 @@ public class CasaControlador {
     @Autowired
     private FamiliaServicio fs;
 
+    @PreAuthorize("hasAnyRole('ROLE_FAMILIA')")
     @GetMapping("/guardarCasa/{id}")
     public String guardarCasa(@PathVariable String id, ModelMap modelo) {
         modelo.put("id", id);
         return "guardarCasa.html";
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_FAMILIA','ROLE_ADMIN')")
     @GetMapping("/mostrarCasa/{id}")
     public String listarCasa(@PathVariable String id, ModelMap modelo) {
         Casa casa = cs.buscarPorId(id);
@@ -42,6 +45,7 @@ public class CasaControlador {
 
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_FAMILIA')")
     @PostMapping("/guardarCasa/{id}")
     public String guardarCasa(@PathVariable String id, @RequestParam String calle,
             @RequestParam Integer numero, @RequestParam String codPostal,
@@ -64,6 +68,7 @@ public class CasaControlador {
         }
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_FAMILIA','ROLE_ADMIN')")
     @GetMapping("/modificarCasa/{id}")
     public String modificarCasa(@PathVariable String id, ModelMap modelo) {
         Casa casa = cs.buscarPorId(id);
@@ -71,6 +76,7 @@ public class CasaControlador {
         return "modificarCasa.html";
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_FAMILIA','ROLE_ADMIN')")
     @PostMapping("/modificarCasa/{id}")
     public String modificarCasa(@PathVariable String id, @RequestParam String calle,
             @RequestParam Integer numero, @RequestParam String codPostal,
@@ -92,6 +98,7 @@ public class CasaControlador {
         }
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_FAMILIA','ROLE_ADMIN')")
     @GetMapping("/alta/{id}")
     public String alta(@PathVariable String id, RedirectAttributes r) {
         try {
@@ -100,40 +107,40 @@ public class CasaControlador {
             r.addFlashAttribute("error", e.getMessage());
         }
         return "redirect:/casa/mostrarCasa/{id}";
-}
+    }
 
-@GetMapping("/baja/{id}")
-        public String baja(@PathVariable String id, RedirectAttributes r) {
+    @PreAuthorize("hasAnyRole('ROLE_FAMILIA','ROLE_ADMIN')")
+    @GetMapping("/baja/{id}")
+    public String baja(@PathVariable String id, RedirectAttributes r) {
         try {
             cs.bajaCasa(id);
         } catch (Exception e) {
             r.addFlashAttribute("error", e.getMessage());
         }
         return "redirect:/casa/mostrarCasa/{id}";
-    } 
+    }
 
-@GetMapping("/filtrarCasas/{idCliente}")
-    public String filtrarCasas(@PathVariable String idCliente, ModelMap modelo){
-        modelo.put("id",idCliente);
+    @GetMapping("/filtrarCasas/{idCliente}")
+    public String filtrarCasas(@PathVariable String idCliente, ModelMap modelo) {
+        modelo.put("id", idCliente);
         return "filtrarCasas.html";
     }
-  
-@PostMapping("/filtrarCasas/{idCliente}")
-public String filtrarCasas 
-        (@PathVariable String idCliente,
-        @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaDesde,
-        @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaHasta,
-        RedirectAttributes r){
-            try{
+
+    @PostMapping("/filtrarCasas/{idCliente}")
+    public String filtrarCasas(@PathVariable String idCliente,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaDesde,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date fechaHasta,
+            RedirectAttributes r) {
+        try {
             List<Casa> casas = cs.buscarCasasPorFechaDisponible(fechaDesde, fechaHasta);
             r.addFlashAttribute("casas", casas);
             r.addFlashAttribute("fechaDesde", fechaDesde);
             r.addFlashAttribute("fechaHasta", fechaHasta);
-            
-            }catch(Exception e){
-            r.addFlashAttribute("error",e.getMessage());
-               
-            }
-            return "redirect:/casa/filtrarCasas/{idCliente}";
+
+        } catch (Exception e) {
+            r.addFlashAttribute("error", e.getMessage());
+
         }
+        return "redirect:/casa/filtrarCasas/{idCliente}";
+    }
 }
