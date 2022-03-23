@@ -13,7 +13,6 @@
         <img th:if="${casa.foto != null}"  class="rounded mx-auto d-block" th:src="${'/foto/casa/' + casa.id}" alt="">
         <img th:if="${casa.foto == null}"  class="rounded mx-auto d-block"  src="/img/casabasica.jpg" alt=""> 
       </div>
-	<div class="container m-5">
 
 		<div th:if="${exito}!=null" class="card text-white bg-success mb-3" >
 			<div class="card-body">
@@ -80,7 +79,7 @@
         <div class="col-md-3">
             <label for="validationDefault04" class="form-label">Tipo de vivienda</label>
             <select name="tipoVivienda" class="form-select" id="validationDefault04" required>
-                  <option selected disabled value="">Seleccione...</option>
+                  <option selected value="">Seleccione...</option>
                   <option th:selected="${casa.tipoVivienda} =='Casa'">Casa</option>
                   <option th:selected="${casa.tipoVivienda} =='Departamento Monoambiente'">Departamento Monoambiente</option>
                   <option th:selected="${casa.tipoVivienda} =='Departamento Duplex'">Departamento Duplex</option>

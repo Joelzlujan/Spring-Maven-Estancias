@@ -1,9 +1,10 @@
 package com.ejercicio2.Estancias.controladores;
 
 import com.ejercicio2.Estancias.entidades.Casa;
+import com.ejercicio2.Estancias.entidades.Propietario;
 import com.ejercicio2.Estancias.enumeraciones.Rol;
 import com.ejercicio2.Estancias.servicios.CasaServicio;
-import com.ejercicio2.Estancias.servicios.FamiliaServicio;
+import com.ejercicio2.Estancias.servicios.PropietarioServicio;
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,25 +28,34 @@ public class CasaControlador {
     private CasaServicio cs;
 
     @Autowired
-    private FamiliaServicio fs;
+    private PropietarioServicio ps;
 
-    @PreAuthorize("hasAnyRole('ROLE_FAMILIA')")
+    @PreAuthorize("hasAnyRole('ROLE_PROPIETARIO')")
     @GetMapping("/guardarCasa/{id}")
     public String guardarCasa(@PathVariable String id, ModelMap modelo) {
         modelo.put("id", id);
         return "guardarCasa.html";
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_FAMILIA','ROLE_ADMIN')")
-    @GetMapping("/mostrarCasa/{id}")
-    public String listarCasa(@PathVariable String id, ModelMap modelo) {
-        Casa casa = cs.buscarPorId(id);
+    @PreAuthorize("hasAnyRole('ROLE_PROPIETARIO','ROLE_ADMIN')")
+    @GetMapping("/mostrarCasa/{idCasa}")
+    public String mostrarCasa(@PathVariable String idCasa, ModelMap modelo) {
+        Casa casa = cs.buscarPorId(idCasa);
         modelo.put("casa", casa);
         return "mostrarCasa.html";
-
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_FAMILIA')")
+    @PreAuthorize("hasAnyRole('ROLE_PROPIETARIO','ROLE_ADMIN')")
+    @GetMapping("/listarCasas/{idPropietario}")
+    public String listarCasas(@PathVariable String idPropietario, ModelMap modelo){
+        Propietario propietario= ps.buscarPorId(idPropietario);
+        List <Casa> casas = propietario.getCasas();
+        modelo.put("casas",casas);
+        modelo.put("propietario",propietario);
+        return "listarCasas.html";
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_PROPIETARIO')")
     @PostMapping("/guardarCasa/{id}")
     public String guardarCasa(@PathVariable String id, @RequestParam String calle,
             @RequestParam Integer numero, @RequestParam String codPostal,
@@ -68,7 +78,7 @@ public class CasaControlador {
         }
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_FAMILIA','ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_PROPIETARIO','ROLE_ADMIN')")
     @GetMapping("/modificarCasa/{id}")
     public String modificarCasa(@PathVariable String id, ModelMap modelo) {
         Casa casa = cs.buscarPorId(id);
@@ -76,7 +86,7 @@ public class CasaControlador {
         return "modificarCasa.html";
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_FAMILIA','ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_PROPIETARIO','ROLE_ADMIN')")
     @PostMapping("/modificarCasa/{id}")
     public String modificarCasa(@PathVariable String id, @RequestParam String calle,
             @RequestParam Integer numero, @RequestParam String codPostal,
@@ -98,7 +108,7 @@ public class CasaControlador {
         }
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_FAMILIA','ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_PROPIETARIO','ROLE_ADMIN')")
     @GetMapping("/alta/{id}")
     public String alta(@PathVariable String id, RedirectAttributes r) {
         try {
@@ -109,7 +119,7 @@ public class CasaControlador {
         return "redirect:/casa/mostrarCasa/{id}";
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_FAMILIA','ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_PROPIETARIO','ROLE_ADMIN')")
     @GetMapping("/baja/{id}")
     public String baja(@PathVariable String id, RedirectAttributes r) {
         try {
@@ -142,5 +152,12 @@ public class CasaControlador {
 
         }
         return "redirect:/casa/filtrarCasas/{idCliente}";
+    }
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @GetMapping("/listarCasas")
+    public String listarCasas(ModelMap modelo){
+        List<Casa> casas = cs.listarCasas();
+        modelo.put("casas",casas);
+        return "listarCasas.html";
     }
 }

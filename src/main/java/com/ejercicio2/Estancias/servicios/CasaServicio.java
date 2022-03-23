@@ -1,7 +1,7 @@
 package com.ejercicio2.Estancias.servicios;
 
 import com.ejercicio2.Estancias.entidades.Casa;
-import com.ejercicio2.Estancias.entidades.Familia;
+import com.ejercicio2.Estancias.entidades.Propietario;
 import com.ejercicio2.Estancias.entidades.Foto;
 import com.ejercicio2.Estancias.errores.ErrorServicio;
 import com.ejercicio2.Estancias.repositorios.CasaRepositorio;
@@ -23,19 +23,19 @@ public class CasaServicio {
     private CasaRepositorio cr;
 
     @Autowired
-    private FamiliaServicio fs;
+    private PropietarioServicio ps;
 
     @Autowired
     private FotoServicio fotoS;
 
     @Transactional
-    public Casa crearCasa(String idFamilia, String calle, Integer numero, String codPostal,
+    public Casa crearCasa(String idPropietario, String calle, Integer numero, String codPostal,
             String ciudad, String pais, Date fechaDesde, Date fechaHasta, Integer minDias,
             Integer maxDias, Double precio, String tipoVivienda, String descripcion, MultipartFile archivo) throws ErrorServicio {
         validarCasa(calle, numero, codPostal, ciudad, pais, fechaDesde, fechaHasta, minDias, maxDias, precio, tipoVivienda);
         validarDescripcion(descripcion);
-        Familia familia = fs.buscarPorId(idFamilia);
-        if (familia != null) {
+        Propietario propietario = ps.buscarPorId(idPropietario);
+        if (propietario != null) {
             Casa c = new Casa();
             c.setCalle(calle);
             c.setNumero(numero);
@@ -51,12 +51,13 @@ public class CasaServicio {
             c.setDescripcion(descripcion);
             c.setAlta(Boolean.TRUE);
             Foto foto = fotoS.guardar(archivo);
-            c.setFoto(foto);
-            familia.setCasa(c);
+            c.setFoto(foto); 
+            c.setPropietario(propietario);
+            //propietario.setCasa(c);
             return cr.save(c);
 
         } else {
-            throw new ErrorServicio("La familia solicitada no se encontró");
+            throw new ErrorServicio("El propietario solicitado no se encontró");
         }
 
     }
@@ -86,7 +87,9 @@ public class CasaServicio {
                 idFoto = c.getFoto().getId();
             }
             Foto foto = fotoS.actualizar(idFoto, archivo);
-            c.setFoto(foto);
+            if (foto != null) {
+                c.setFoto(foto);
+            }
             return cr.save(c);
         } else {
             throw new ErrorServicio("No se encontro la casa solicitada");
@@ -106,6 +109,16 @@ public class CasaServicio {
         return cr.buscarCasasPorFechaDisponible(fechaDesde, fechaHasta);
     }
 
+    @Transactional(readOnly = true)
+    public List<Casa> listarCasas() {
+        return cr.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Casa> listarCasasPorPropietario(String idPropietario) {
+        return cr.listarCasasPorPropietario(idPropietario);
+    }
+    
     @Transactional
     public void altaCasa(String id) throws ErrorServicio {
         Casa casa = cr.getById(id);

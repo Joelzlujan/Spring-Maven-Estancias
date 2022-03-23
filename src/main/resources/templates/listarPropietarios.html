@@ -10,7 +10,6 @@
     </head>
     <body>
         <div class="container m-5">
-
             <div th:if="${exito}!=null" class="card text-white bg-success mb-3" >
                 <div class="card-body">
                     <h5 class="card-title">Exito</h5>
@@ -24,53 +23,47 @@
                 </div>
             </div>
         <div class="container m-5" >
-
             <table class="table table-dark">
                 <thead>
                     <tr>
                         <th scope="col">Id</th>
                         <th scope="col">Alias</th>
                         <th scope="col">Email</th>
-                        <th scope="col">Nombre Cliente</th>
-                        <th scope="col">Calle</th>
-                        <th scope="col">Numero</th>                       
-                        <th scope="col">Codigo Postal</th>
-                        <th scope="col">Ciudad</th>
-                        <th scope="col">Pais</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Telefono</th>                                          
                         <th scope="col">Activo?</th>
                         <th scope="col">Acciones</th>
                         <th scope="col">Foto</th>
                     </tr>
                 </thead>
-                <tbody th:each="cliente : ${clientes}"> 
+                <tbody th:each="propietario : ${propietarios}"> 
                     <tr>
-                        <th scope="row" th:text="${cliente.id}"></th>
-                        <th scope="row" th:text="${cliente.alias}"></th>
-                        <td th:text="${cliente.email}"></td>
-                        <td th:text="${cliente.nombre}"></td>
-                        <td th:text="${cliente.calle}"></td>
-                        <td th:text="${cliente.numero}"></td>
-                        <td th:text="${cliente.codPostal}"></td>
-                        <td th:text="${cliente.ciudad}"></td>
-                        <td th:text="${cliente.pais}"></td>
+                        <th scope="row" th:text="${propietario.id}"></th>
+                        <th scope="row" th:text="${propietario.alias}"></th>
+                        <th scope="row" th:text="${propietario.email}"></th>
+                        <th scope="row" th:text="${propietario.nombre}"></th>
+                        <td th:text="${propietario.telefono}"></td>
                         <td>
-                            <i th:if="${cliente.alta}" class="fa fa-circle text-success"></i>
-                            <i th:unless="${cliente.alta}"   class="fa fa-circle" style="color:red;"></i>
+                            <i th:if="${propietario.alta}" class="fa fa-circle text-success"></i>
+                            <i th:unless="${propietario.alta}"   class="fa fa-circle" style="color:red;"></i>
                         </td>
                         <td>
-                            <a th:href= "@{/usuario/alta/__${cliente.id}__/__${cliente.rol}__}"><i class="fa fa-arrow-up"></i></a> <!--FLECHITA-->
-                            <a th:href= "@{/usuario/baja/__${cliente.id}__/__${cliente.rol}__}"><i class="fa fa-ban"></i></a> 
-                            <a th:href= "@{/usuario/modificarCliente/__${cliente.id}__}"><i class="fas fa-user-edit"></i></a>
-                            <a th:href= "@{/usuario/claveUsuario/__${cliente.id}__}"><i class="fas fa-virus"></i></a>
-                            <a th:href= "@{/casa/filtrarCasas/__${cliente.id}__}"><i class="fas fa-filter"></i></a>
+                            <a th:href= "@{/usuario/alta/__${propietario.id}__/__${propietario.rol}__}"><i class="fa fa-arrow-up"></i></a> <!--FLECHITA-->
+                            <a th:href= "@{/usuario/baja/__${propietario.id}__/__${propietario.rol}__}"><i class="fa fa-ban"></i></a> 
+                            <a th:href= "@{/usuario/modificarPropietario/__${propietario.id}__}"><i class="fas fa-user-edit"></i></a>
+                            <a th:href= "@{/usuario/claveUsuario/__${propietario.id}__}"><i class="fas fa-key"></i></a>
+                            <a  th:href="@{/casa/listarCasas/__${propietario.id}__}"><i class="fas fa-door-open"></i></i></a>                          
                         </td>
                         <td>
-                            <img th:if="${cliente.foto != null}" class="img-fluid rounded-circle" th:src="${'/foto/usuario/' + cliente.id}"
+                            <img th:if="${propietario.foto != null}" class="img-fluid rounded-circle" th:src="${'/foto/usuario/' + propietario.id}"
                               alt="">
-                            <img th:if="${cliente.foto == null}" class="img-fluid rounded-circle" src="/img/usuariobasico.png" alt="">
+                            <img th:if="${propietario.foto == null}" class="img-fluid rounded-circle" src="/img/usuariobasico.png" alt="">
                           </td>
                     </tr>
-
+                    <tr>
+                        <th scope="row">Descripcion</th>
+                        <td colspan="7" th:text="${propietario.descripcion}"></td>
+                      </tr>
                 </tbody>
             </table>
 

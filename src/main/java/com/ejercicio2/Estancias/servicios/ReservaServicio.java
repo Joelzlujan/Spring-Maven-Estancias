@@ -91,7 +91,18 @@ public class ReservaServicio {
         List<Reserva>reservas=rr.listarReservasPorCliente(idCliente);
         return reservas;
     }
-
+    
+    @Transactional(readOnly = true)
+    public List <Reserva> listarReservas(){
+        List<Reserva>reservas = rr.findAll();
+        return reservas;
+    }
+    @Transactional(readOnly = true)
+    public List<Reserva> listarReservaPorPropietario(String idPropietario){
+        List<Reserva>reservas = rr.listarReservaPorPropietario(idPropietario);
+        return reservas;
+    }
+    
     public void validarReserva(String idCliente, String idCasa, Date fechaDesdeReserva, Date fechaHastaReserva) throws ErrorServicio {
         if (fechaDesdeReserva == null) {
             throw new ErrorServicio("La fecha de ingreso es nula");

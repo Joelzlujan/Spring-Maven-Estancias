@@ -1,0 +1,21 @@
+header {
+    background-color: bisque;
+    height: auto;
+    position: sticky;
+    
+}
+header, h2 {
+    font-size: 30px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+#cliente, #propietario, #admin{
+    background: steelblue;
+    display: flex;
+    flex-direction: row;
+    flex-wrap:wrap;   
+}
+section {
+    background-color: green;
+    font-family: Lato,sans-serif;
+    display: flex;
+}

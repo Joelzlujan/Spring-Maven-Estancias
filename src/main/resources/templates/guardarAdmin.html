@@ -8,7 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 </head>
 <body>
-    <h2>Guardar CLIENTE</h2>
+    <h2>Guardar Admin</h2>
 	<div class="container m-5">
 
 		<div th:if="${exito}!=null" class="card text-white bg-success mb-3" >
@@ -24,8 +24,8 @@
 			</div>
 		</div>
 
-    <form th:action="@{/usuario/guardarUsuario}" method="POST" class="row g-3" enctype="multipart/form-data">
-        <input type="hidden" th:value= "${rol}" name="rol">
+    <form  th:action="@{/usuario/guardarAdmin}" method="POST" class="row g-3" enctype="multipart/form-data">
+        <input type="hidden" th:value= "${session.usuariosession.rol}" name="rol">
         <div class="col-md-4">
             <label for="validationDefaultUsername" class="form-label">Alias</label>
             <div class="input-group">
@@ -42,37 +42,8 @@
           <input type="password" name="clave" class="form-control" id="validationDefault02" placeholder="clave 4 a 6 digitos" required>
         </div>
         <div class="mb-3">
-          <label for="formFile" class="form-label">Ingrese una fotografía del Cliente</label>
+          <label for="formFile" class="form-label">Ingrese una fotografía del Administrador</label>
           <input class="form-control" name="archivo" type="file" id="formFile">
-        </div>
-        <div class="col-md-4">
-            <label for="validationDefault01" class="form-label">Nombre Cliente</label>
-            <input type="text" name="nombreC" class="form-control" id="validationDefault01" placeholder="Juan Pepito" required>
-          </div>
-          <div class="col-md-6">
-            <label for="validationDefault03" class="form-label">Direccion</label>
-            <input type="text" name="calle" class="form-control" id="validationDefault03" placeholder="Calle" required>
-          </div>
-          <div class="col-md-6">
-            <label for="validationDefault03" class="form-label">Numero</label>
-            <input type="number" name="numero" class="form-control" id="validationDefault03" placeholder="Numero" required>
-          </div>
-          <div class="col-md-3">
-            <label for="validationDefault05" class="form-label">Zip</label>
-            <input type="text" name="codPostal" class="form-control" id="validationDefault05" placeholder="Codigo Postal" required>
-          </div>
-        <div class="col-md-6">
-          <label for="validationDefault03" class="form-label">Ciudad</label>
-          <input type="text" name="ciudad" class="form-control" id="validationDefault03" placeholder="Mendoza" required>
-        </div>
-        <div class="col-md-3">
-          <label for="validationDefault04" class="form-label">Pais</label>
-          <select name="pais" class="form-select" id="validationDefault04" required>
-            <option selected value="">Seleccione...</option>
-            <option>Argentina</option>
-            <option>Chile</option>
-            <option>Peru</option>
-          </select>
         </div>
 
         <div class="col-12">
@@ -86,7 +57,7 @@
         <div class="col-12">
           <button class="btn btn-primary" type="submit">Enviar Formulario</button>
         </div>
-        <a class="btn btn-primary" th:href="@{/cliente}" role="button">Volver </a>
+        <a class="btn btn-primary" th:href="@{/inicio}" role="button">Volver </a>
       </form>    
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>    

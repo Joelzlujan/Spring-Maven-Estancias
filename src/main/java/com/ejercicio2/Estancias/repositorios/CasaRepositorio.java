@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -46,4 +47,7 @@ public interface CasaRepositorio extends JpaRepository<Casa, String> {
             + "OR r.casa_id is NULL; ", nativeQuery = true)
             
     public List<Casa> buscarCasasPorFechaDisponible(Date fechaDesde, Date fechaHasta);
+    
+    @Query("SELECT c FROM Casa c WHERE c.propietario.id = :idPropietario")
+    public List<Casa> listarCasasPorPropietario (@Param("idPropietario")String idPropietario);
 }

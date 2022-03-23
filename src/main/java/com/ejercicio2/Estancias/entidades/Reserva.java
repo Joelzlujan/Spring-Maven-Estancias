@@ -24,7 +24,7 @@ public class Reserva {
     
     @Id
     @GeneratedValue(generator="uuid")
-    @GenericGenerator(name="uuid",strategy="uuid2")        
+    @GenericGenerator(name="uuid",strategy="uuid2")
     private String id;
     
 
@@ -46,9 +46,7 @@ public class Reserva {
     public void setAlta(Boolean alta) {
         this.alta = alta;
     }
-    
-    
-    
+
     public Casa getCasa() {
         return casa;
     }

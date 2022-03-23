@@ -11,7 +11,7 @@
 </head>
 
 <body>
-  <h2>Mis Reservas</h2>
+  <h2>Lista de Reservas</h2>
   <div class="container m-5">
 
     <div th:if="${exito}!=null" class="card text-white bg-success mb-3">
@@ -34,6 +34,8 @@
         <thead>
           <tr>
             <th scope="col">Id</th>
+            <th scope="col">Cliente</th>
+            <th scope="col">Propietario</th>
             <th scope="col">Calle</th>
             <th scope="col">Numero</th>
             <th scope="col">Codigo Postal</th>
@@ -51,6 +53,8 @@
         <tbody th:each="reserva : ${reservas}">
           <tr>
             <th scope="row" th:text="${reserva.casa.id}"></th>
+            <th scope="row" th:text="${reserva.cliente.nombre}"></th>
+            <th scope="row" th:text="${reserva.casa.propietario.nombre}"></th>
             <th scope="row" th:text="${reserva.casa.calle}"></th>
             <th scope="row" th:text="${reserva.casa.numero}"></th>
             <th scope="row" th:text="${reserva.casa.codPostal}"></th>

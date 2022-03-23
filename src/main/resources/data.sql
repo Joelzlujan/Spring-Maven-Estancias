@@ -21,20 +21,12 @@ END ^;
 DROP TRIGGER IF EXISTS admin_update ^; 
 
 -- CREA EL TRIGGER (DISPARADOR) QUE SE ACTIVA CUANDO ALGUIEN QUIERE ACTUALIZA EL ALIAS AL ADMIN DE LA TABLA USUARIO
-CREATE TRIGGER admin_update
-BEFORE UPDATE
-ON usuario
-FOR EACH ROW
-BEGIN
-  IF OLD.alias = 'admin' THEN -- Abort when trying to remove this record
-    CALL cannot_update_error;  -- raise an error to prevent updating from the table
-  END IF;
-END^;
-
-
-
-
-
- 
-
-
+-- CREATE TRIGGER admin_update
+-- BEFORE UPDATE
+-- ON usuario
+-- FOR EACH ROW
+-- BEGIN
+--   IF OLD.alias = 'admin' THEN -- Abort when trying to remove this record
+--     CALL cannot_update_error;  -- raise an error to prevent updating from the table
+--   END IF;
+-- END^;
